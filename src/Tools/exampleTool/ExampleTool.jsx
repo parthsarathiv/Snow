@@ -20,7 +20,7 @@ export default function DoenetExampleTool() {
 
   return (
     <Tool>
-      <navPanel>
+      <navPanel isInitOpen>
         <XView x={x} />
         <button
           onClick={() => {
@@ -34,7 +34,7 @@ export default function DoenetExampleTool() {
 
       <headerPanel title="Doenet Example Tool"></headerPanel>
 
-      <mainPanel>
+      <mainPanel responsiveControls={<p>test</p>}>
         {/* responsiveControls={<BreadcrumbContainer />} */}
         {/* <Drive driveId="ZLHh5s8BWM2azTVFhazIH" urlClickBehavior="select" /> */}
       </mainPanel>

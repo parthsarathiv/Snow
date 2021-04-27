@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import React, { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState, Suspense, useContext } from "react";
 import { nanoid } from 'nanoid';
 import { 
   faChalkboard,
@@ -54,7 +54,7 @@ import '../../_utils/util.css';
 import GlobalFont from '../../_utils/GlobalFont';
 import { driveColors, driveImages } from '../../_reactComponents/Drive/util';
 import Tool from '../_framework/Tool';
-import { useToolControlHelper } from '../_framework/ToolRoot';
+import { useToolControlHelper , ProfileContext } from '../_framework/ToolRoot';
 import { useToast } from '../_framework/Toast';
 
 
@@ -855,6 +855,32 @@ export default function Library(props) {
   
   const history = useHistory();
 
+  const profile = useContext(ProfileContext)
+console.log(">>>profile",profile)
+
+  if (profile.signedIn === "0"){
+    return (<>
+     <GlobalFont/>
+    <Tool>
+
+      <headerPanel title="Library">
+      </headerPanel>
+
+      <mainPanel>
+        <div style={{margin:"10px"}}>
+          <h1>You are not signed in</h1>
+          <h2>Library currently requires sign in for use</h2> 
+          <h2><a href='/signin'>Sign in with this link</a></h2>
+          </div>
+      </mainPanel>
+    
+     
+    </Tool>
+    </>
+    )
+  }
+
+
   function useOutsideDriveSelector() {
     let newParams = {};
     newParams["path"] = `:::`;
@@ -885,7 +911,7 @@ export default function Library(props) {
     <>
     <GlobalFont/>
     <Tool>
-      <navPanel>
+      <navPanel isInitOpen>
       <div style={{marginBottom:"40px",height:"100vh"}} 
        onClick={useOutsideDriveSelector} >
       <Drive types={['content','course']}  foldersOnly={true} />
@@ -895,9 +921,8 @@ export default function Library(props) {
       <headerPanel title="Library">
       </headerPanel>
 
-      <mainPanel>
+      <mainPanel > 
       <AutoSelect />
-
       {breadcrumbContainer}
         <div 
         onClick={()=>{
@@ -939,10 +964,10 @@ export default function Library(props) {
       </Container>
       </supportPanel>
 
-      <menuPanel title="Selected">
+      <menuPanel title="Selected" isInitOpen>
         <ItemInfo  />
       </menuPanel>
-      <menuPanel title="+ Add Items">
+      <menuPanel title="+ Add Items" isInitOpen>
        <AddMenuPanel route={props.route} />
       </menuPanel>
 

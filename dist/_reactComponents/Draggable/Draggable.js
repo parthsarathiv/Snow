@@ -29,7 +29,9 @@ const Draggable = ({children, id, className = "", onDragStart, onDrag, onDragEnd
         origin: {x: clientX, y: clientY},
         actionType
       }));
-      onDragStart?.();
+      onDragStart?.({
+        ev: targetEvent.current
+      });
       timerRef.current = null;
     }, 300);
   }, [onDragStart, id]);
@@ -62,7 +64,7 @@ const Draggable = ({children, id, className = "", onDragStart, onDrag, onDragEnd
       ...state2,
       translation
     }));
-    onDrag?.({clientX, clientY, translation, id});
+    onDrag?.({clientX, clientY, translation, id, ev});
   }, [state.origin, onDrag, id]);
   useEffect(() => {
     if (initializingDrag) {

@@ -3,25 +3,12 @@ import logo from "../media/Doenet_Logo_Frontpage.png.proxy.js";
 import Cookies from "../_snowpack/pkg/js-cookie.js";
 import axios from "../_snowpack/pkg/axios.js";
 export default function SignOut() {
-  const [signedOutAttempts, setSignedOutAttempts] = useState(0);
+  const [signOutAttempted, setSignOutAttempted] = useState(false);
   useEffect(() => {
-    const phpUrl = "/api/signOut.php";
-    const data = {};
-    const payload = {
-      params: data
-    };
-    axios.get(phpUrl, payload).then(() => {
-      Cookies.remove("TrackingConsent", {path: "/", sameSite: "strict"});
-      Cookies.remove("Stay", {
-        path: "/",
-        expires: 24e3,
-        sameSite: "strict"
-      });
-      Cookies.remove("Device", {
-        path: "/",
-        expires: 24e3,
-        sameSite: "strict"
-      });
+    localStorage.clear();
+    axios.get("/api/signOut.php", {params: {}}).then((resp) => {
+      console.log(">>>signout resp", resp);
+      setSignOutAttempted(true);
     }).catch((error) => {
       this.setState({error});
     });
@@ -45,7 +32,7 @@ export default function SignOut() {
       alt: "Chocolate glazed donut on a white cartoon cloud, sitting on a sky blue circle background"
     }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h2", null, "You are Signed Out!"))));
   }
-  if (signedOutAttempts > 4) {
+  if (signOutAttempted) {
     return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
       style: {
         position: "absolute",
@@ -63,9 +50,6 @@ export default function SignOut() {
       alt: "Chocolate glazed donut on a white cartoon cloud, sitting on a sky blue circle background"
     }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h2", null, "FAILED SIGN OUT"), /* @__PURE__ */ React.createElement("p", null, "Please manually remove your cookies."))));
   }
-  setTimeout(() => {
-    setSignedOutAttempts(signedOutAttempts + 1);
-  }, 100);
   return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
     style: {
       position: "absolute",

@@ -16,7 +16,7 @@ const Wrapper = styled.div`
   grid-area: contentPanel;
   display: grid;
   grid-template:
-    'mainControls . supportControls' ${({ $hasRespCont }) =>
+    'mainControls handle supportControls' ${({ $hasRespCont }) =>
       $hasRespCont ? 40 : 0}px
     'mainPanel handle supportPanel' 1fr
     / ${({ $proportion }) => `${$proportion}fr auto ${1 - $proportion}fr`};
@@ -52,7 +52,7 @@ const panelPropotion = selectorFamily({
 });
 
 const calcInfo = (num) =>
-  num < 0.1 ? 0.1 : num > 0.95 ? 1 : num > 0.9 ? 0.9 : num;
+  num < 0.05 ? 0 : num < 0.1 ? 0.1 : num > 0.95 ? 1 : num > 0.9 ? 0.9 : num;
 
 export const useSupportDividerController = () => {
   const stackId = useStackId();
