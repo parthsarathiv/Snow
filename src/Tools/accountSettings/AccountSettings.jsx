@@ -19,7 +19,6 @@ import { useToolControlHelper } from '../_framework/ToolRoot';
 import "../_framework/doenet.css";
 import Textinput from "../_framework/Textinput";
 import Switch from "../_framework/Switch";
-import { useCookies } from 'react-cookie';
 import Cookies from 'js-cookie';
 import axios from "axios";
 
@@ -42,7 +41,7 @@ let WidthEnforcer = styled.div`
 
 let ProfilePicture = styled.button`
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
-    url("/profile_pictures/${props => props.pic}.jpg");
+    url("/media/profile_pictures/${props => props.pic}.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -59,7 +58,7 @@ let ProfilePicture = styled.button`
   user-select: none;
   &:hover, &:focus {
     background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-      url("/profile_pictures/${props => props.pic}.jpg");
+      url("/media/profile_pictures/${props => props.pic}.jpg");
     color: rgba(255, 255, 255, 1);
   }
 `;
@@ -159,9 +158,12 @@ export default function DoenetProfile(props) {
   };
 
   const jwt = Cookies.get();
+  
   const trackingCookie = Cookies.get('TrackingConsent');
   const deviceNameCookie = Cookies.get('Device');
   const stayCookie = Cookies.get('Stay');
+
+  console.log(">>>", trackingCookie, deviceNameCookie, stayCookie);
 
   // const [trackingCookie, setTrackingCookie] = useCookies('TrackingConsent');
   // const [jwt, setJwt] = useCookies('jwt');
@@ -169,10 +171,10 @@ export default function DoenetProfile(props) {
   // const [stayCookie, setStayCookie] = useCookies('Stay');
 
   const [profile, setProfile] = useState({});
-  const [tracking, setTracking] = useState(trackingCookie.TrackingConsent);
+  const [tracking, setTracking] = useState(trackingCookie);
   if (tracking === undefined){
     let cookieSettingsObj = { path: "/" };
-    if (stayCookie.Stay > 0){cookieSettingsObj.maxAge = stayCookie.Stay }
+    if (stayCookie > 0){cookieSettingsObj.maxAge = stayCookie }
     Cookies.set('TrackingConsent', true, cookieSettingsObj);
     setTracking(true);
   }
@@ -308,7 +310,7 @@ export default function DoenetProfile(props) {
       return (
         <ModalPic
           key={`modalpic-${value}`}
-          pic={`/profile_pictures/${value}.jpg`}
+          pic={`/media/profile_pictures/${value}.jpg`}
           alt={`${value} profile picture`}
           onClick={e => {
             updateMyProfile("profilePicture", value, true); // updates immediately
@@ -346,14 +348,15 @@ export default function DoenetProfile(props) {
 
   return (
     <Tool>
-      <navPanel>
+      <headerPanel title="Account Settings" />
+      {/* <navPanel>
         <div>
           <button onClick={() => { alert('scroll to Public') }}>Public</button><br />
           <button onClick={() => { alert('scroll to Private') }}>Private</button><br />
           <button onClick={() => { alert('scroll to Tracking') }}>Tracking</button><br />
           <button onClick={() => { alert('scroll to Roles') }}>Roles</button>
         </div>
-      </navPanel>
+      </navPanel> */}
       <mainPanel>
         <div style={{ padding: "0px 10px 1300px 10px" }}>
           <SectionHeader>Public</SectionHeader>
@@ -375,7 +378,7 @@ export default function DoenetProfile(props) {
           >
             {profile.screenName}
           </Textinput>
-          Device Name: {deviceNameCookie.Device}
+          Device Name: {deviceNameCookie}
           <SectionHeader>Private</SectionHeader>
 
           <Textinput
@@ -404,7 +407,7 @@ export default function DoenetProfile(props) {
             id="trackingConsent"
             onChange={e => {
               let cookieSettingsObj = { path: "/" };
-              if (stayCookie.Stay > 0){cookieSettingsObj.maxAge = stayCookie.Stay }
+              if (stayCookie > 0){cookieSettingsObj.maxAge = stayCookie }
               Cookies.set('TrackingConsent', e.target.checked, cookieSettingsObj);
               setTracking(e.target.checked);
               updateMyProfile("trackingConsent", e.target.checked + 0,true)
