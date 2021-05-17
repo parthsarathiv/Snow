@@ -123,6 +123,7 @@ export default function Textinput(props) {
   // Section: spring animations
   const [labelStyle, setLabelStyle] = useSpring(() => labelStyles.baseline);
   if (value) {
+    setLabelStyle(labelStyles.active);
     setLabelStyle(labelStyles.notEmpty);
   }
 
@@ -180,6 +181,9 @@ export default function Textinput(props) {
     );
   }
 
+  // if(value){
+  //   setLabelStyle(labelStyles.active)
+  // }
   return (
     <StyledInputContainer
       {...props}
